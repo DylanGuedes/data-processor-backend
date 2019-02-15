@@ -1,0 +1,27 @@
+version: '2.1'
+
+services:
+  data-processor:
+    container_name: 'data-processor-backend'
+    build: .
+    command: bash -c "mix deps.get && mix deps.compile && mix ecto.setup && mix phx.server"
+    ports:
+      - 4000:4000
+    volumes:
+      - ./:/opt/app
+    depends_on:
+      - data-processor-postgres
+
+  data-processor-postgres:
+    container_name: data-processor-postgres
+    image: 'postgres:10'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+
+networks:
+  default:
+    external:
+      name: platform
