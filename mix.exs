@@ -42,7 +42,8 @@ defmodule DataProcessorBackend.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:cors_plug, "~> 2.0"},
-      {:jsonapi, git: "https://github.com/jeregrine/jsonapi", tag: "v1.0.0"}
+      {:jsonapi, git: "https://github.com/jeregrine/jsonapi", tag: "v1.0.0"},
+      {:ex_machina, "~> 2.2", only: :test}
     ]
   end
 

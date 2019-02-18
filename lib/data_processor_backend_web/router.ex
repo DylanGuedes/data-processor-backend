@@ -11,6 +11,7 @@ defmodule DataProcessorBackendWeb.Router do
   scope "/api", DataProcessorBackendWeb do
     pipe_through :api
 
-    resources("/spark_templates", JobController, only: [:index])
+    resources("/job_templates", JobTemplateController, only: [:index, :create, :show, :update])
+    resources("/job_scripts", JobScriptController, only: [:index, :create, :show])
   end
 end

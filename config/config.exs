@@ -32,3 +32,11 @@ import_config "#{Mix.env()}.exs"
 config :mime, :types, %{
   "application/vnd.api+json" => ["json"]
 }
+
+config :jsonapi,
+  host: "localhost:4000",
+  scheme: "http",
+  field_transformation: :underscore,
+  remove_links: false,
+  json_library: Jason,
+  namespace: "/api"

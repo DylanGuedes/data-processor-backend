@@ -40,5 +40,6 @@ defmodule DataProcessorBackendWeb.Endpoint do
     key: "_data_processor_backend_key",
     signing_salt: "EUZYBTZl"
 
+  plug CORSPlug
   plug DataProcessorBackendWeb.Router
 end
