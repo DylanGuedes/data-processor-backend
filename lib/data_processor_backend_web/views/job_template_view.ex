@@ -1,11 +1,12 @@
 defmodule DataProcessorBackendWeb.JobTemplateView do
-  use JSONAPI.View, type: "job_templates", namespace: "/api"
+  use DataProcessorBackendWeb, :view
+  use JaSerializer.PhoenixView
 
   alias DataProcessorBackendWeb.JobScriptView
 
-  def fields, do: [:title, :user_params]
+  attributes [:title, :user_params]
 
-  def relationships do
-    [job_script: JobScriptView]
-  end
+  has_one :job_script,
+    serializer: JobScriptView,
+    include: true
 end

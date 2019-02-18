@@ -2,9 +2,9 @@ defmodule DataProcessorBackendWeb.Router do
   use DataProcessorBackendWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
-    plug(JSONAPI.EnsureSpec)
-    plug(JSONAPI.UnderscoreParameters)
+    plug :accepts, ["json-api"]
+    plug JaSerializer.ContentTypeNegotiation
+    plug JaSerializer.Deserializer
     plug(CORSPlug, origin: "http://localhost:4200")
   end
 

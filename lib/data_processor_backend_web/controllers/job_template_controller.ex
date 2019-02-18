@@ -4,69 +4,53 @@ defmodule DataProcessorBackendWeb.JobTemplateController do
   alias DataProcessorBackend.Repo
   alias DataProcessorBackend.InterSCity.JobTemplate
   alias DataProcessorBackend.InterSCity.JobScript
-  alias DataProcessorBackendWeb.JobTemplateView
-
-  plug JSONAPI.QueryParser,
-    filter: ~w(title),
-    sort: ~w(title inserted_at),
-    view: JobTemplateView
 
   def index(conn, _params) do
-    job_templates = JobTemplate.all()
+    templates = JobTemplate.all()
 
     conn
-    |> put_view(JobTemplateView)
-    |> render("index.json", %{data: job_templates})
+    |> render("index.json-api", %{data: templates})
   end
 
-  def create(conn, %{"data" => params}) do
-    attrs = Map.get(params, "attributes")
-    script_id = Map.get(params, "relationships") |> Map.get("job_script") |> Map.get("data") |> Map.get("id")
-    script = Repo.get!(JobScript, script_id)
-
-    case JobTemplate.create(attrs, script) do
+  def create(conn, %{"data" => data}) do
+    attrs = JaSerializer.Params.to_attributes(data)
+    changeset = JobTemplate.changeset(%JobTemplate{}, attrs)
+    case Repo.insert(changeset) do
       {:ok, template} ->
+        loaded_template = template |> Repo.preload(:job_script)
         conn
-        |> put_view(JobTemplateView)
-        |> render("show.json", %{data: template})
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        errors =
-          changeset.errors
-          |> Enum.map(fn {field, {reason, _}} -> %{field => reason} end)
-
+        |> put_status(201)
+        |> render("show.json-api", data: loaded_template)
+      {:error, changeset} ->
         conn
         |> put_status(422)
-        |> json(%{errors: [errors]})
+        |> render(:errors, data: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
-    template = Repo.get!(JobTemplate, id) |> Repo.preload(:job_script)
-
+    template = Repo.get(JobTemplate, id) |> Repo.preload([:job_script])
     conn
-    |> render("show.json", %{data: template})
+    |> render("show.json-api", data: template, opts: [include: "job_script"])
   end
 
-  def update(conn, %{"data" => params, "id" => id}) do
-    attrs = Map.get(params, "attributes")
-    template = Repo.get!(JobTemplate, id)
-    changeset = JobTemplate.changeset(template, attrs)
+  def update(conn, %{"data" => data}) do
+    attrs = JaSerializer.Params.to_attributes(data)
+    template = Repo.get!(JobTemplate, Map.get(attrs, "id"))
+    changeset = JobTemplate
+                |> Repo.get!(Map.get(attrs, "id"))
+                |> JobTemplate.changeset(attrs)
 
     case Repo.update(changeset) do
       {:ok, template} ->
+        loaded_template = template |> Repo.preload(:job_script)
         conn
-        |> put_view(JobTemplateView)
-        |> render("show.json", %{data: template})
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        errors =
-          changeset.errors
-          |> Enum.map(fn {field, {reason, _}} -> %{field => reason} end)
-
+        |> put_status(201)
+        |> render("show.json-api", data: loaded_template)
+      {:error, changeset} ->
         conn
         |> put_status(422)
-        |> json(%{errors: [errors]})
+        |> render(:errors, data: changeset)
     end
   end
 end

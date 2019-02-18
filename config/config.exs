@@ -29,14 +29,9 @@ config :phoenix, :json_library, Jason
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
 
-config :mime, :types, %{
-  "application/vnd.api+json" => ["json"]
-}
+config :phoenix, :format_encoders,
+  "json-api": Poison
 
-config :jsonapi,
-  host: "localhost:4000",
-  scheme: "http",
-  field_transformation: :underscore,
-  remove_links: false,
-  json_library: Jason,
-  namespace: "/api"
+config :mime, :types, %{
+  "application/vnd.api+json" => ["json-api"]
+}

@@ -5,8 +5,13 @@ defmodule DataProcessorBackendWeb.JobScriptControllerTest do
 
   alias DataProcessorBackendWeb.JobScriptView
 
-  setup do
-    {:ok, conn: build_conn()}
+  setup %{conn: conn} do
+    conn =
+      conn
+      |> put_req_header("accept", "application/vnd.api+json")
+      |> put_req_header("content-type", "application/vnd.api+json")
+
+    {:ok, conn: conn}
   end
 
   describe ":index" do
@@ -15,25 +20,15 @@ defmodule DataProcessorBackendWeb.JobScriptControllerTest do
 
       conn = get conn, Routes.job_script_path(conn, :index)
 
-      assert json_response(conn, 200) == _render_job_scripts("index.json", %{conn: conn, data: [job_script]})
+      assert json_response(conn, 200)
     end
   end
 
   describe ":create" do
     test "correctly creates scripts", %{conn: conn} do
-      job_script_params = build(:job_script)
-      IO.inspect job_script_params
-      request_params = %{"attributes" => build(:job_script), "type" => "job-scripts"}
-
-      conn = get conn, Routes.job_script_path(conn, :create, %{"data" => request_params})
-
-      assert json_response(conn, 200)# == _render_job_scripts("index.json", %{conn: conn, data: [job_script]})
+      params = Poison.encode!(%{data: %{attributes: params_for(:job_script)}})
+      conn = post(conn, Routes.job_script_path(conn, :create), params)
+      assert json_response(conn, 201)
     end
-  end
-
-  defp _render_job_scripts(template, assigns) do
-    JobScriptView.render(template, assigns)
-    |> Jason.encode!
-    |> Jason.decode!
   end
 end

@@ -28,7 +28,7 @@ defmodule DataProcessorBackend.InterSCity.JobTemplate do
 
   def changeset(struct, attrs) do
     struct
-    |> cast(attrs, [:title, :user_params, :publish_strategy])
+    |> cast(attrs, [:title, :user_params, :publish_strategy, :id])
     |> validate_required([:title])
     |> cast_assoc(:job_script, with: &JobScript.changeset/2)
   end
