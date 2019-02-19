@@ -2,6 +2,7 @@ defmodule DataProcessorBackend.InterSCity.JobScript do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
+  use DataProcessorBackend.InterSCity.Model
 
   alias DataProcessorBackend.Repo
   alias DataProcessorBackend.InterSCity.JobScript

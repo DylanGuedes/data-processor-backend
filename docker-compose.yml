@@ -11,6 +11,8 @@ services:
       - ./:/opt/app
     depends_on:
       - data-processor-postgres
+    environment:
+      DATABASE_HOST: data-processor-postgres
 
   data-processor-postgres:
     container_name: data-processor-postgres

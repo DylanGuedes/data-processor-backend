@@ -13,7 +13,7 @@ defmodule DataProcessorBackendWeb.JobScriptController do
 
   def create(conn, %{"data" => data}) do
     attrs = JaSerializer.Params.to_attributes(data)
-    changeset = JobScript.changeset(%JobScript{}, attrs)
+    changeset = JobScript.build(attrs)
     case Repo.insert(changeset) do
       {:ok, script} ->
         conn
@@ -27,9 +27,26 @@ defmodule DataProcessorBackendWeb.JobScriptController do
   end
 
   def show(conn, %{"id" => id}) do
-    script = Repo.get!(JobScript, id)
+    script = JobScript.find!(id)
 
     conn
     |> render("show.json", %{data: script})
+  end
+
+  def update(conn, %{"data" => data}) do
+    attrs = JaSerializer.Params.to_attributes(data)
+    script = JobScript.find!(Map.get(attrs, "id"))
+    changeset = JobScript.changeset(script, attrs)
+
+    case Repo.update(changeset) do
+      {:ok, script} ->
+        conn
+        |> put_status(201)
+        |> render("show.json-api", data: script)
+      {:error, changeset} ->
+        conn
+        |> put_status(422)
+        |> render(:errors, data: changeset)
+    end
   end
 end

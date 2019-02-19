@@ -11,7 +11,9 @@ defmodule DataProcessorBackendWeb.Router do
   scope "/api", DataProcessorBackendWeb do
     pipe_through :api
 
-    resources("/job_templates", JobTemplateController, only: [:index, :create, :show, :update])
-    resources("/job_scripts", JobScriptController, only: [:index, :create, :show])
+    resources("/job_templates", JobTemplateController, only: [:index, :create, :show, :update]) do
+      post("/clone", CloneController, :clone)
+    end
+    resources("/job_scripts", JobScriptController, only: [:index, :create, :show, :update])
   end
 end

@@ -14,5 +14,5 @@ config :data_processor_backend, DataProcessorBackend.Repo,
   username: "postgres",
   password: "postgres",
   database: "data_processor_backend_test",
-  hostname: "data-processor-postgres",
+  hostname: System.get_env("DATABASE_HOST"),
   pool: Ecto.Adapters.SQL.Sandbox

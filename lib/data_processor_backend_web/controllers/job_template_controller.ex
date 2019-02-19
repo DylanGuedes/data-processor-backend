@@ -6,7 +6,7 @@ defmodule DataProcessorBackendWeb.JobTemplateController do
   alias DataProcessorBackend.InterSCity.JobScript
 
   def index(conn, _params) do
-    templates = JobTemplate.all()
+    templates = JobTemplate.all() |> Repo.preload(:job_script)
 
     conn
     |> render("index.json-api", %{data: templates})
@@ -14,13 +14,13 @@ defmodule DataProcessorBackendWeb.JobTemplateController do
 
   def create(conn, %{"data" => data}) do
     attrs = JaSerializer.Params.to_attributes(data)
-    changeset = JobTemplate.changeset(%JobTemplate{}, attrs)
+    changeset = JobTemplate.build(attrs)
     case Repo.insert(changeset) do
       {:ok, template} ->
-        loaded_template = template |> Repo.preload(:job_script)
+        preloaded_template = template |> Repo.preload(:job_script)
         conn
         |> put_status(201)
-        |> render("show.json-api", data: loaded_template)
+        |> render("show.json-api", data: preloaded_template)
       {:error, changeset} ->
         conn
         |> put_status(422)
@@ -29,24 +29,23 @@ defmodule DataProcessorBackendWeb.JobTemplateController do
   end
 
   def show(conn, %{"id" => id}) do
-    template = Repo.get(JobTemplate, id) |> Repo.preload([:job_script])
+    template = JobTemplate.find!(id, [preload: :job_script])
+
     conn
     |> render("show.json-api", data: template, opts: [include: "job_script"])
   end
 
   def update(conn, %{"data" => data}) do
     attrs = JaSerializer.Params.to_attributes(data)
-    template = Repo.get!(JobTemplate, Map.get(attrs, "id"))
-    changeset = JobTemplate
-                |> Repo.get!(Map.get(attrs, "id"))
-                |> JobTemplate.changeset(attrs)
+    template = JobTemplate.find!(Map.get(attrs, "id"))
+    changeset = JobTemplate.changeset(template, attrs)
 
     case Repo.update(changeset) do
       {:ok, template} ->
-        loaded_template = template |> Repo.preload(:job_script)
+        preloaded_template = template |> Repo.preload(:job_script)
         conn
         |> put_status(201)
-        |> render("show.json-api", data: loaded_template)
+        |> render("show.json-api", data: preloaded_template)
       {:error, changeset} ->
         conn
         |> put_status(422)

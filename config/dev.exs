@@ -52,5 +52,5 @@ config :data_processor_backend, DataProcessorBackend.Repo,
   username: "postgres",
   password: "postgres",
   database: "data_processor_backend_dev",
-  hostname: "data-processor-postgres",
+  hostname: System.get_env("DATABASE_HOST"),
   pool_size: 10

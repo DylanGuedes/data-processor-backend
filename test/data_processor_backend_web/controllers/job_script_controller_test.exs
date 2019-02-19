@@ -3,7 +3,9 @@ defmodule DataProcessorBackendWeb.JobScriptControllerTest do
 
   import DataProcessorBackend.Factory
 
+  alias DataProcessorBackend.Repo
   alias DataProcessorBackendWeb.JobScriptView
+  alias DataProcessorBackend.InterSCity.JobScript
 
   setup %{conn: conn} do
     conn =
@@ -29,6 +31,16 @@ defmodule DataProcessorBackendWeb.JobScriptControllerTest do
       params = Poison.encode!(%{data: %{attributes: params_for(:job_script)}})
       conn = post(conn, Routes.job_script_path(conn, :create), params)
       assert json_response(conn, 201)
+    end
+  end
+
+  describe ":update" do
+    test "correctly update scripts", %{conn: conn} do
+      script = insert(:job_script)
+      params = %{"attributes" => %{"title" => "newtitle"}, "id" => script.id}
+      conn = patch(conn, Routes.job_script_path(conn, :update, script.id), %{"data" => params})
+      updated_script = Repo.get!(JobScript, script.id)
+      assert updated_script.title != script.title
     end
   end
 end
