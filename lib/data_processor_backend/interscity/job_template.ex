@@ -4,6 +4,7 @@ defmodule DataProcessorBackend.InterSCity.JobTemplate do
   import Ecto.Query
   use DataProcessorBackend.InterSCity.Model
   alias DataProcessorBackend.InterSCity.JobTemplate
+  alias DataProcessorBackend.InterSCity.ProcessingJob
   alias DataProcessorBackend.Repo
   alias DataProcessorBackend.InterSCity.JobScript
 
@@ -30,8 +31,9 @@ defmodule DataProcessorBackend.InterSCity.JobTemplate do
   def changeset(struct, attrs) do
     struct
     |> cast(attrs, [:title, :user_params, :publish_strategy, :id])
-    |> validate_required([:title])
+    |> assoc_constraint(:job_script)
     |> cast_assoc(:job_script, with: &JobScript.changeset/2)
+    |> validate_required([:title])
   end
 
   def create(attrs, script) do
@@ -55,7 +57,7 @@ defmodule DataProcessorBackend.InterSCity.JobTemplate do
     title = Map.get(attrs, :title, template.title)
     user_params = Map.get(attrs, :user_params, template.user_params)
     publish_strategy = Map.get(attrs, :publish_strategy, template.publish_strategy)
-    job_script = Map.get(attrs, :job_script, template.job_script)
+    job_script = Map.get(attrs, :job_script, template.job_script) |> Map.from_struct()
     params = %{
       title: title,
       user_params: user_params,
@@ -63,5 +65,9 @@ defmodule DataProcessorBackend.InterSCity.JobTemplate do
       job_script: job_script
     }
     empty_changeset = JobTemplate.changeset(empty(), params)
+  end
+
+  def schedule_job(%JobTemplate{}=template) do
+    ProcessingJob.create(template)
   end
 end

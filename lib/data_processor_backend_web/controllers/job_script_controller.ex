@@ -13,7 +13,7 @@ defmodule DataProcessorBackendWeb.JobScriptController do
 
   def create(conn, %{"data" => data}) do
     attrs = JaSerializer.Params.to_attributes(data)
-    changeset = JobScript.build(attrs)
+    changeset = JobScript.changeset(%JobScript{}, attrs)
     case Repo.insert(changeset) do
       {:ok, script} ->
         conn

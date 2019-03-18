@@ -10,9 +10,6 @@ defmodule DataProcessorBackend.InterSCity.Model do
       def find!(id),
         do: DataProcessorBackend.Repo.get!(__MODULE__, id)
 
-      def build(opts),
-        do: __MODULE__.changeset(__MODULE__.empty(), opts)
-
       def empty() do
         __MODULE__.__struct__
       end

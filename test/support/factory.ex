@@ -3,6 +3,7 @@ defmodule DataProcessorBackend.Factory do
 
   alias DataProcessorBackend.InterSCity.JobTemplate
   alias DataProcessorBackend.InterSCity.JobScript
+  alias DataProcessorBackend.InterSCity.ProcessingJob
 
   def job_template_factory do
     %JobTemplate{
@@ -13,7 +14,8 @@ defmodule DataProcessorBackend.Factory do
       },
       publish_strategy: %{
         format: "csv"
-      }
+      },
+      job_script: build(:job_script)
     }
   end
 
@@ -23,6 +25,14 @@ defmodule DataProcessorBackend.Factory do
       code: "blalb",
       language: "python",
       path: "spark_jobs/python/kmeans.py"
+    }
+  end
+
+  def processing_job_factory do
+    %ProcessingJob{
+      uuid: "abc-123",
+      job_template: build(:job_template),
+      job_state: "ready"
     }
   end
 end

@@ -12,9 +12,11 @@ defmodule DataProcessorBackendWeb.JobTemplateController do
     |> render("index.json-api", %{data: templates})
   end
 
-  def create(conn, %{"data" => data}) do
-    attrs = JaSerializer.Params.to_attributes(data)
-    changeset = JobTemplate.build(attrs)
+  def create(conn, params) do
+    attrs = JaSerializer.Params.to_attributes(params)
+    script = JobScript.find!(attrs["job_script_id"])
+    changeset = JobTemplate.changeset(%JobTemplate{job_script: script}, attrs)
+
     case Repo.insert(changeset) do
       {:ok, template} ->
         preloaded_template = template |> Repo.preload(:job_script)
@@ -29,7 +31,7 @@ defmodule DataProcessorBackendWeb.JobTemplateController do
   end
 
   def show(conn, %{"id" => id}) do
-    template = JobTemplate.find!(id, [preload: :job_script])
+    template = JobTemplate.find!(id) |> Repo.preload(:job_script)
 
     conn
     |> render("show.json-api", data: template, opts: [include: "job_script"])

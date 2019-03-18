@@ -9,10 +9,13 @@ services:
       - 4000:4000
     volumes:
       - ./:/opt/app
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - data-processor-postgres
     environment:
       DATABASE_HOST: data-processor-postgres
+      SPARK_SCRIPTS_PATH: /opt/spark-utils/scripts
+      STRATEGY_TO_USE: docker
 
   data-processor-postgres:
     container_name: data-processor-postgres
@@ -22,6 +25,15 @@ services:
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
+
+  kafka:
+    container_name: kafka
+    image: 'spotify/kafka'
+    ports:
+      - 9092:9092
+      - 2181:2181
+    environment:
+      ADVERTISED_HOST: 172.17.0.1
 
 networks:
   default:
