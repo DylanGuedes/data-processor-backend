@@ -11,6 +11,7 @@ defmodule DataProcessorBackend.InterSCity.ProcessingJob do
   schema "processing_jobs" do
     field(:uuid, :string)
     field(:job_state, :string)
+    field(:log, :string)
     belongs_to(:job_template, JobTemplate)
 
     timestamps()
@@ -18,7 +19,7 @@ defmodule DataProcessorBackend.InterSCity.ProcessingJob do
 
   def changeset(struct, attrs) do
     struct
-    |> cast(attrs, [:uuid, :job_state])
+    |> cast(attrs, [:uuid, :job_state, :log])
     |> assoc_constraint(:job_template)
     |> cast_assoc(:job_template, with: &JobTemplate.changeset/2)
   end
@@ -57,32 +58,29 @@ defmodule DataProcessorBackend.InterSCity.ProcessingJob do
     docker_arguments = [
       "exec",
       spark_container,
-      "/spark/bin/spark-submit",
+      "spark-submit",
       "--packages",
       "org.mongodb.spark:mongo-spark-connector_2.11:2.3.1",
       full_file_path,
-      job.uuid
+      "#{job.job_template.id}"
     ]
 
-    pid = self()
+    {log, status} = System.cmd("docker", docker_arguments, stderr_to_stdout: true)
 
-    spawn(fn ->
-      {log, status} = System.cmd("docker", docker_arguments, stderr_to_stdout: true)
-      IO.puts "\n\n\n\n\n### [LOG] ###"
-      IO.inspect log
-      IO.puts "\n\n\n\n\n### [LOG] ###"
+    IO.puts "\n\n\n\n\n\nLOG BELOw"
+    IO.puts log
+    IO.puts "\n\n\n\n\n[ENDLOG]"
 
-      status_text =
-        case status do
-          0 -> "finished"
-          _ -> "error"
-        end
+    status_text = case status do
+      0 -> "finished"
+      _ -> "error"
+    end
 
-      job
-      |> ProcessingJob.changeset(%{"log" => log, "job_status" => status_text})
-      |> Repo.update()
-    end)
+    job
+    |> ProcessingJob.changeset(%{"log" => log, "job_state" => status_text})
+    |> Repo.update!()
   end
+
   def _submit_script_to_spark(job, _default) do
     script = job.job_template.job_script
     full_file_path = _script_full_path(script)
@@ -93,31 +91,35 @@ defmodule DataProcessorBackend.InterSCity.ProcessingJob do
       job.uuid
     ]
 
-    pid = self()
+    {log, status} = System.cmd("spark-submit", spark_args, stderr_to_stdout: true)
 
-    spawn(fn ->
-      {log, status} = System.cmd("spark-submit", spark_args, stderr_to_stdout: true)
-      IO.puts "\n\n\n\n\n### [LOG] ###"
-      IO.inspect log
-      IO.puts "\n\n\n\n\n### [LOG] ###"
+    IO.puts "\n\n\n\n\n\nLOG BELOw"
+    IO.puts log
+    IO.puts "\n\n\n\n\n[ENDLOG]"
 
-      status_text =
-        case status do
-          0 -> "finished"
-          _ -> "error"
-        end
+    status_text = case status do
+      0 -> "finished"
+      _ -> "error"
+    end
 
-      job
-      |> ProcessingJob.changeset(%{"log" => log, "job_status" => status_text})
-      |> Repo.update()
-    end)
+    job
+    |> ProcessingJob.changeset(%{"log" => log, "job_state" => status_text})
+    |> Repo.update!()
   end
   def submit_script_to_spark(job) do
     strategy_to_use = System.get_env("STRATEGY_TO_USE")
     _submit_script_to_spark(job, strategy_to_use)
   end
 
+  def change_state_to_loading(job) do
+    job
+    |> ProcessingJob.changeset(%{"job_state" => "running"})
+    |> Repo.update!()
+  end
+
   def run(processing_job) do
+    change_state_to_loading(processing_job)
+
     processing_job
     |> ensure_script_exist()
     |> submit_script_to_spark()

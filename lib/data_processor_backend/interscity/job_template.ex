@@ -14,7 +14,7 @@ defmodule DataProcessorBackend.InterSCity.JobTemplate do
     field(:user_params, :map,
       default: %{
         schema: %{},
-        functional_params: %{},
+        functional: %{},
         interscity: %{}
       }
     )

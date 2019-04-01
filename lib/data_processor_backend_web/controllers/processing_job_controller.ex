@@ -17,4 +17,18 @@ defmodule DataProcessorBackendWeb.ProcessingJobController do
     conn
     |> render("show.json-api", %{data: job})
   end
+
+  def delete(conn, %{"id" => id}) do
+    job = ProcessingJob.find!(id)
+    case Repo.delete(job) do
+      {:ok, _} ->
+        conn
+        |> put_status(201)
+        |> render(:errors, data: [])
+      {:error, reason} ->
+        conn
+        |> put_status(422)
+        |> render(:errors, data: reason)
+    end
+  end
 end

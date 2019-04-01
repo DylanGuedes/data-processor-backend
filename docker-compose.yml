@@ -9,6 +9,7 @@ services:
       - 4000:4000
     volumes:
       - ./:/opt/app
+      - ./scripts:/opt/spark-utils/scripts
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - data-processor-postgres
@@ -26,14 +27,38 @@ services:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
 
-  kafka:
-    container_name: kafka
-    image: 'spotify/kafka'
-    ports:
-      - 9092:9092
-      - 2181:2181
+  master:
+    image: 'gettyimages/spark'
+    container_name: "master"
+    hostname: master
     environment:
-      ADVERTISED_HOST: 172.17.0.1
+      MASTER: spark://master:7077
+    volumes:
+      - ./scripts:/opt/spark-utils/scripts
+
+  worker:
+    image: gettyimages/spark
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
+    container_name: worker
+    hostname: worker
+    environment:
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8081
+    links:
+      - master
+    volumes:
+      - ./scripts:/opt/spark-utils/scripts
+
+  # kafka:
+  #   container_name: kafka
+  #   image: 'spotify/kafka'
+  #   ports:
+  #     - 9092:9092
+  #     - 2181:2181
+  #   environment:
+  #     ADVERTISED_HOST: 172.17.0.1
 
 networks:
   default:

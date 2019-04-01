@@ -11,14 +11,14 @@ defmodule DataProcessorBackendWeb.Router do
   scope "/api", DataProcessorBackendWeb do
     pipe_through :api
 
-    resources("/job_templates", JobTemplateController, only: [:index, :create, :show, :update]) do
+    resources("/job_templates", JobTemplateController, only: [:index, :create, :show, :update, :delete]) do
       post("/clone", CloneController, :clone)
       post("/schedule", JobSchedulerController, :schedule)
     end
 
-    resources("/job_scripts", JobScriptController, only: [:index, :create, :show, :update])
+    resources("/job_scripts", JobScriptController, only: [:index, :create, :show, :update, :delete])
 
-    resources("/processing_jobs", ProcessingJobController, only: [:index, :show]) do
+    resources("/processing_jobs", ProcessingJobController, only: [:index, :show, :delete]) do
       post("/run", JobRunnerController, :run)
     end
   end

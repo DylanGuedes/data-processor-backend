@@ -7,8 +7,9 @@ defmodule DataProcessorBackendWeb.JobRunnerController do
   alias DataProcessorBackendWeb.ProcessingJobView
 
   def run(conn, %{"processing_job_id" => job_id}) do
-    processing_job = ProcessingJob.find!(job_id) |> Repo.preload([{:job_template, [:job_script]}])
-    ProcessingJob.run(processing_job)
+    processing_job = ProcessingJob.find!(job_id)
+                     |> Repo.preload([{:job_template, [:job_script]}])
+                     |> ProcessingJob.run
 
     conn
     |> put_view(ProcessingJobView)

@@ -54,4 +54,18 @@ defmodule DataProcessorBackendWeb.JobTemplateController do
         |> render(:errors, data: changeset)
     end
   end
+
+  def delete(conn, %{"id" => id}) do
+    template = JobTemplate.find!(id)
+    case Repo.delete(template) do
+      {:ok, _} ->
+        conn
+        |> put_status(201)
+        |> render(:errors, data: [])
+      {:error, reason} ->
+        conn
+        |> put_status(422)
+        |> render(:errors, data: reason)
+    end
+  end
 end
