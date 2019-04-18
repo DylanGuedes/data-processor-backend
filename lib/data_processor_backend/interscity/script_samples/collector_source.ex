@@ -5,13 +5,14 @@ from pyspark.sql.types import StructType, StructField, ArrayType, StringType, Do
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, col
 import requests
+import os
 
 import sys
 
 if __name__ == '__main__':
 \    # Loading the dataset
 \    my_uuid = str(sys.argv[1])
-
+\    os.environ['PYSPARK_PYTHON'] = '/usr/bin/python3'
 \    url = "#{DataProcessorBackendWeb.Endpoint.url}" + '/api/job_templates/{0}'.format(my_uuid)
 \    response = requests.get(url)
 \    params = response.json()["data"]["attributes"]["user-params"]
