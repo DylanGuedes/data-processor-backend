@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
 \    features = list(map(lambda a: a.strip(), functional_params["features"].split(",")))
 
-\    DEFAULT_URI = "mongodb://data-collector-mongo/data_collector_development"
+\    DEFAULT_URI = "mongodb://#{System.get_env("DATA_COLLECTOR_MONGO")}/data_collector_development"
 \    DEFAULT_COLLECTION = "sensor_values"
 \    pipeline = "{'$match': {'capability': '"+capability+"'}}"
 \    schema_params = params["schema"]

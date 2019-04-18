@@ -1,8 +1,6 @@
 defmodule DataProcessorBackend.InterSCity.ScriptSamples.CollectorSource do
   def code do
     """
-DEFAULT_DATA_COLLECTOR_URL = "http://data-collector:3000"
-
 from pyspark.sql.types import StructType, StructField, ArrayType, StringType, DoubleType, IntegerType, DateType
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, col
@@ -24,7 +22,7 @@ if __name__ == '__main__':
 \    spark = SparkSession.builder.getOrCreate()
 \    spark.sparkContext.setLogLevel("ERROR")
 
-\    DEFAULT_URI = "mongodb://data-collector-mongo/data_collector_development"
+\    DEFAULT_URI = "mongodb://#{System.get_env("DATA_COLLECTOR_MONGO")}/data_collector_development"
 \    DEFAULT_COLLECTION = "sensor_values"
 \    pipeline = "{'$match': {'capability': '"+capability+"'}}"
 \    schema_params = params["schema"]

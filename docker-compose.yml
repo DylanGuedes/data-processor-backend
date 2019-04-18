@@ -17,6 +17,7 @@ services:
       DATABASE_HOST: data-processor-postgres
       SPARK_SCRIPTS_PATH: /opt/spark-utils/scripts
       STRATEGY_TO_USE: docker
+      DATA_COLLECTOR_MONGO: data-collector-mongo
 
   data-processor-postgres:
     container_name: data-processor-postgres
