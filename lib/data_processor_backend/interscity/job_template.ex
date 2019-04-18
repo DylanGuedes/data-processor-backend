@@ -19,8 +19,11 @@ defmodule DataProcessorBackend.InterSCity.JobTemplate do
       }
     )
 
+    %{day: day, year: year, month: month, hour: hour, minute: minute, second: second} = DateTime.utc_now()
+
     field(:publish_strategy, :map, null: false, default: %{
-      format: "csv"
+      format: "csv",
+      path: "#{day}-#{month}-#{year}-#{hour}-#{minute}-#{second}"
     })
 
     belongs_to(:job_script, JobScript)
