@@ -1,7 +1,6 @@
 defmodule DataProcessorBackend.InterSCity.ScriptSamples.Kmeans do
   def code do
     """
-DEFAULT_DATA_PROCESSOR_URL = "http://data-processor-backend:4000"
 DEFAULT_DATA_COLLECTOR_URL = "http://data-collector:3000"
 
 from pyspark.sql.types import StructType, StructField, ArrayType, StringType, DoubleType, IntegerType, DateType
@@ -18,7 +17,7 @@ if __name__ == '__main__':
 \    # Loading the dataset
 \    my_uuid = str(sys.argv[1])
 
-\    url = DEFAULT_DATA_PROCESSOR_URL + '/api/job_templates/{0}'.format(my_uuid)
+\    url = DataProcessorBackendWeb.Endpoint.url + '/api/job_templates/{0}'.format(my_uuid)
 \    response = requests.get(url)
 \    params = response.json()["data"]["attributes"]["user-params"]
 
