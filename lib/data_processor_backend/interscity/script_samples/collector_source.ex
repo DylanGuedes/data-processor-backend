@@ -14,7 +14,7 @@ if __name__ == '__main__':
 \    # Loading the dataset
 \    my_uuid = str(sys.argv[1])
 
-\    url = DataProcessorBackendWeb.Endpoint.url + '/api/job_templates/{0}'.format(my_uuid)
+\    url = #{DataProcessorBackendWeb.Endpoint.url} + '/api/job_templates/{0}'.format(my_uuid)
 \    response = requests.get(url)
 \    params = response.json()["data"]["attributes"]["user-params"]
 
