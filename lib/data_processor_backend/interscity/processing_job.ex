@@ -88,7 +88,7 @@ defmodule DataProcessorBackend.InterSCity.ProcessingJob do
     spark_args = ["--packages",
       "org.mongodb.spark:mongo-spark-connector_2.11:2.3.1",
       full_file_path,
-      job.uuid
+      job.job_template.id
     ]
 
     {log, status} = System.cmd("spark-submit", spark_args, stderr_to_stdout: true)
