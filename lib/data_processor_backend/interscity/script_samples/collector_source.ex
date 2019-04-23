@@ -20,8 +20,16 @@ if __name__ == '__main__':
 \    functional_params = params["functional"]
 \    capability = params["interscity"]["capability"]
 
-\    spark = SparkSession.builder.getOrCreate()
-\    spark.sparkContext.setLogLevel("ERROR")
+\    MASTER_URL = #{System.get_env("SPARK_MASTER")}
+\    conf = (SparkConf()
+\     .set("spark.eventLog.enabled", "true")
+\     .set("spark.history.fs.logDirectory", "/tmp/spark-events")
+\     .set("spark.app.name", "step2-datacollector-extraction(dataprocessor)")
+\     .set("spark.jars.packages", "org.mongodb.spark:mongo-spark-connector_2.11:2.4.0")
+\     .setMaster(MASTER_URL))
+\    sc = SparkContext(conf=conf)
+\    spark = SparkSession(sc)
+\    spark.sparkContext.setLogLevel("INFO")
 
 \    DEFAULT_URI = "mongodb://#{System.get_env("DATA_COLLECTOR_MONGO")}/data_collector_development"
 \    DEFAULT_COLLECTION = "sensor_values"
