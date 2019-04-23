@@ -8,6 +8,7 @@ from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml.clustering import KMeans
 import requests
+from pyspark import SparkContext, SparkConf
 import os
 
 import sys
@@ -25,7 +26,7 @@ if __name__ == '__main__':
 \    capability = params["interscity"]["capability"]
 
 \    features = list(map(lambda a: a.strip(), functional_params["features"].split(",")))
-\    MASTER_URL = #{System.get_env("SPARK_MASTER")}
+\    MASTER_URL = "#{System.get_env("SPARK_MASTER")}"
 \    conf = (SparkConf()
 \     .set("spark.eventLog.enabled", "true")
 \     .set("spark.history.fs.logDirectory", "/tmp/spark-events")

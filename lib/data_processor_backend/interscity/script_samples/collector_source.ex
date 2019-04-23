@@ -6,6 +6,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, col
 import requests
 import os
+from pyspark import SparkContext, SparkConf
 
 import sys
 
@@ -20,7 +21,7 @@ if __name__ == '__main__':
 \    functional_params = params["functional"]
 \    capability = params["interscity"]["capability"]
 
-\    MASTER_URL = #{System.get_env("SPARK_MASTER")}
+\    MASTER_URL = "#{System.get_env("SPARK_MASTER")}"
 \    conf = (SparkConf()
 \     .set("spark.eventLog.enabled", "true")
 \     .set("spark.history.fs.logDirectory", "/tmp/spark-events")
