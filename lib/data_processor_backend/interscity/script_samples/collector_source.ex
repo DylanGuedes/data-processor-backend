@@ -20,12 +20,16 @@ if __name__ == '__main__':
 
 \    functional_params = params["functional"]
 \    capability = params["interscity"]["capability"]
-
+\    pipeline = "{'$match': {'capability': '"+capability+"'}}"
+\    if (params["interscity"]["limit"]):
+\        u = str(int(params["interscity"]["limit"]))
+\        pipeline = "[{'$match': {'capability': '"+capability+"'}}, {'$limit': "+u+"}]"
+\    appname = params["interscity"]["appname"]
 \    MASTER_URL = "#{System.get_env("SPARK_MASTER")}"
 \    conf = (SparkConf()
 \     .set("spark.eventLog.enabled", "true")
 \     .set("spark.history.fs.logDirectory", "/tmp/spark-events")
-\     .set("spark.app.name", "step2-datacollector-extraction(dataprocessor)")
+\     .set("spark.app.name", appname)
 \     .set("spark.jars.packages", "org.mongodb.spark:mongo-spark-connector_2.11:2.4.0")
 \     .setMaster(MASTER_URL))
 \    sc = SparkContext(conf=conf)
@@ -34,7 +38,6 @@ if __name__ == '__main__':
 
 \    DEFAULT_URI = "mongodb://#{System.get_env("DATA_COLLECTOR_MONGO")}/data_collector_development"
 \    DEFAULT_COLLECTION = "sensor_values"
-\    pipeline = "{'$match': {'capability': '"+capability+"'}}"
 \    schema_params = params["schema"]
 \    sch = StructType()
 \    sch.add("uuid", StringType())
@@ -77,7 +80,11 @@ if __name__ == '__main__':
     %{
       schema: %{nodeID: "integer", tick: "integer", uuid: "string"},
       functional: %{},
-      interscity: %{capability: "city_traffic"}
+      interscity: %{
+        capability: "city_traffic",
+        appname: "analysis1-dataprocessor-scenario0",
+        limit: 33_466_742*0.01
+      }
     }
   end
 end
