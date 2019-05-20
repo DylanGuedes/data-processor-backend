@@ -14,6 +14,7 @@ ease-to-setup. The command to run it is `docker-compose up -d data-processor-pos
       DATABASE_HOST: your_postgres_host (such as localhost)
       SPARK_SCRIPTS_PATH: path_to_store_spark_scripts (such as /opt/spark-utils/scripts)
       DATA_COLLECTOR_MONGO: host_running_datacollector_mongo (such as localhost or data-collector-mongo for Docker)
+      SPARK_MASTER
 ```
 5. Create and migrate your database with `mix ecto.setup`
 6. Start Phoenix endpoint with `mix phx.server`. If you are using Docker/DockerCompose

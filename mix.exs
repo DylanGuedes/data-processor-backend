@@ -44,6 +44,7 @@ defmodule DataProcessorBackend.MixProject do
       {:cors_plug, "~> 2.0"},
       {:ja_serializer, "~> 0.13.0"},
       {:ex_machina, "~> 2.2", only: :test},
+      {:mongodb, ">= 0.0.0"},
       {:ex_guard, "~> 1.3", only: :test}
     ]
   end

@@ -16,13 +16,16 @@ alias DataProcessorBackend.InterSCity.JobTemplate
 alias DataProcessorBackend.InterSCity.ProcessingJob
 alias DataProcessorBackend.InterSCity.ScriptSamples.Kmeans
 alias DataProcessorBackend.InterSCity.ScriptSamples.CollectorSource
+alias DataProcessorBackend.InterSCity.ScriptSamples.Schemas
+alias DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery
 
 Repo.delete_all ProcessingJob
 Repo.delete_all JobTemplate
 Repo.delete_all JobScript
 
+# Schemas
+
 # Collector Extraction
-#
 attrs = %{
   title: "Extract Collector",
   language: CollectorSource.language,
@@ -44,4 +47,16 @@ attrs = %{
 
 {:ok, template} =
   %{title: Kmeans.example_title, user_params: Kmeans.example_user_params}
+  |> JobTemplate.create(script)
+
+# Query SQL
+attrs = %{
+  title: "Query SQL",
+  language: "python",
+  code: SqlQuery.gen_code(),
+  path: "sql_query.py"}
+{:ok, script} = attrs |> JobScript.create()
+
+{:ok, template} =
+  %{title: "Car Positions SQL Query", user_params: SqlQuery.default_params()}
   |> JobTemplate.create(script)
