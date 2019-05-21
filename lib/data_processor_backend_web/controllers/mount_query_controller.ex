@@ -8,13 +8,13 @@ defmodule DataProcessorBackendWeb.MountQueryController do
   alias DataProcessorBackend.InterSCity.JobScript
   alias DataProcessorBackendWeb.ProcessingJobView
 
-  def mount(conn, data) do
-    query = data["query"]
-    capability = data["capability"]
-    fileformat = data["fileformat"]
-    filename = data["filename"]
+  def mount(conn, %{"fileformat" => fileformat, "capability" => capability, "query" => query, "filename" => filename}) do
 
     script = Repo.get_by(JobScript, title: "Query SQL")
+
+    IO.puts "###script###"
+    IO.inspect script
+    IO.puts "###script###"
 
     publish_strategy = %{
       format: fileformat,

@@ -21,9 +21,7 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
             acc
         end
       end
-      def _parse_sch() do
-        %{}
-      end
+      def _parse_sch(), do: %{}
 
       def discover_schema(capability) do
         {:ok, conn} = Mongo.start_link(url: mongodb_url())
@@ -31,6 +29,12 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
         lists = conn
                  |> Mongo.find("sensor_values", %{"capability" => capability}, [limit: 1])
                  |> Enum.to_list
+        h =
+          case lists do
+            [] -> []
+            [h|_t] -> h
+            _ -> :ok
+          end
 
         IO.inspect lists
         IO.puts capability
