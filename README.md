@@ -20,6 +20,7 @@ ease-to-setup. The command to run it is `docker-compose up -d data-processor-pos
 6. Start Phoenix endpoint with `mix phx.server`. If you are using Docker/DockerCompose
 you may use `docker-compose up -d data-processor-backend`
 7. DataProcessor will be available at [`localhost:4000`](http://localhost:4000).
+8. Also, make sure directory `/tmp/spark-events` exist.
 
 ## Using it
 

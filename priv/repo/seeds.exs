@@ -56,7 +56,3 @@ attrs = %{
   code: SqlQuery.gen_code(),
   path: "sql_query.py"}
 {:ok, script} = attrs |> JobScript.create()
-
-{:ok, template} =
-  %{title: "Car Positions SQL Query", user_params: SqlQuery.default_params()}
-  |> JobTemplate.create(script)

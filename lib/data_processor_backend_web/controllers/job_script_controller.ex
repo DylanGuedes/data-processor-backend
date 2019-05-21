@@ -26,6 +26,9 @@ defmodule DataProcessorBackendWeb.JobScriptController do
     end
   end
 
+  def materialize_sql_script(conn, %{"data" => data}) do
+  end
+
   def show(conn, %{"id" => id}) do
     script = JobScript.find!(id)
 

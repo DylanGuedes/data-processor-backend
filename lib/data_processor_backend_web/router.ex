@@ -2,14 +2,16 @@ defmodule DataProcessorBackendWeb.Router do
   use DataProcessorBackendWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json-api", "json"]
-    plug JaSerializer.ContentTypeNegotiation
-    plug JaSerializer.Deserializer
+    plug(:accepts, ["json-api", "json"])
+    plug(JaSerializer.ContentTypeNegotiation)
+    plug(JaSerializer.Deserializer)
     plug(CORSPlug, origin: "http://localhost:4200")
   end
 
   scope "/api", DataProcessorBackendWeb do
     pipe_through :api
+
+    post("/mount_query_script", MountQueryController, :mount)
 
     resources("/job_templates", JobTemplateController, only: [:index, :create, :show, :update, :delete]) do
       post("/clone", CloneController, :clone)

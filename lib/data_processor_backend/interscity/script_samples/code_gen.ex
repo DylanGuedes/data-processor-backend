@@ -28,9 +28,14 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
       def discover_schema(capability) do
         {:ok, conn} = Mongo.start_link(url: mongodb_url())
 
-        [h|_T] = conn
+        lists = conn
                  |> Mongo.find("sensor_values", %{"capability" => capability}, [limit: 1])
                  |> Enum.to_list
+
+        IO.inspect lists
+        IO.puts capability
+
+        [h|_t] = lists
 
         Enum.reduce(h, %{}, fn ele, acc -> _parse_sch(ele, acc) end)
       end
@@ -53,6 +58,7 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
         \    url = "#{DataProcessorBackendWeb.Endpoint.url}" + '/api/job_templates/{0}'.format(my_uuid)
         \    response = requests.get(url)
         \    params = response.json()["data"]["attributes"]["user-params"]
+        \    publish_strategy = response.json()["data"]["attributes"]["publish-strategy"]
         \    capability = params["interscity"]["capability"]
         \    pipeline = "{'$match': {'capability': '"+capability+"'}}"
         """
@@ -60,6 +66,9 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
 
       def footer_commons do
         """
+        \    fileformat = publish_strategy["format"]
+        \    filepath = publish_strategy["path"]
+        \    df.write.format(fileformat).mode("overwrite").save("/tmp/"+filepath+"."+fileformat)
         \    spark.stop()
         \    sc.stop()
         """
@@ -124,11 +133,9 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
       end
 
       def gen_body() do
-        retrieve_collector_data
-      end
-
-      def gen_operation() do
         """
+        #{mount_schema()}
+        #{retrieve_collector_data()}
         """
       end
 

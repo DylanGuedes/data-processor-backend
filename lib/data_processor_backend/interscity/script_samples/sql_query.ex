@@ -6,9 +6,10 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
 
   def gen_operation do
     """
+    \    df.createOrReplaceTempView(capability)
     \    queries = params["interscity"]["sql_queries"]
     \    for q in queries:
-    \        spark.sql(q)
+    \        df = spark.sql(q)
     """
   end
 
@@ -18,6 +19,16 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
       functional: %{},
       interscity: %{
         capability: "city_traffic"
+      }
+    }
+  end
+  def default_params(capability, query)do
+    %{
+      schema: discover_schema(capability),
+      functional: %{},
+      interscity: %{
+        capability: capability,
+        sql_queries: String.split(query, "\n")
       }
     }
   end
