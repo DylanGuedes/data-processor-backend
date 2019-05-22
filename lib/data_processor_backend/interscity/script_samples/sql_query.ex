@@ -12,7 +12,7 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
     \        for q in queries:
     \            df = spark.sql(q)
     \    else:
-    \        df = spark.sql(q)
+    \        df = spark.sql(queries)
     """
   end
 
