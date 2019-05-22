@@ -4,7 +4,7 @@ defmodule DataProcessorBackendWeb.JobTemplateView do
 
   alias DataProcessorBackendWeb.JobScriptView
 
-  attributes [:title, :user_params, :publish_strategy]
+  attributes [:title, :user_params, :publish_strategy, :updated_at]
 
   has_one :job_script,
     serializer: JobScriptView,

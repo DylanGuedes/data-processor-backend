@@ -2,7 +2,7 @@ defmodule DataProcessorBackendWeb.JobScriptView do
   use DataProcessorBackendWeb, :view
   use JaSerializer.PhoenixView
 
-  attributes [:title, :code, :language, :path, :code_sample]
+  attributes [:title, :code, :language, :path, :code_sample, :updated_at]
 
   def code_sample(job_script, _conn) do
     String.split(job_script.code, "\n")

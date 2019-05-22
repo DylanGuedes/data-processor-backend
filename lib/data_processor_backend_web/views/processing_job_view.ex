@@ -4,7 +4,7 @@ defmodule DataProcessorBackendWeb.ProcessingJobView do
 
   alias DataProcessorBackendWeb.JobTemplateView
 
-  attributes [:uuid, :job_state, :log]
+  attributes [:uuid, :job_state, :log, :updated_at]
 
   has_one :job_template,
     serializer: JobTemplateView,

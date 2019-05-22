@@ -8,7 +8,10 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
     """
     \    df.createOrReplaceTempView(capability)
     \    queries = params["interscity"]["sql_queries"]
-    \    for q in queries:
+    \    if (isinstance(queries, list)):
+    \        for q in queries:
+    \            df = spark.sql(q)
+    \    else:
     \        df = spark.sql(q)
     """
   end
