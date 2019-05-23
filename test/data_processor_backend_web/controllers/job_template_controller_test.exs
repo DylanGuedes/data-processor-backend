@@ -42,5 +42,18 @@ defmodule DataProcessorBackendWeb.JobTemplateControllerTest do
       updated_template = Repo.get!(JobTemplate, template.id)
       assert updated_template.title != template.title
     end
+
+    test "correctly updates query strings", %{conn: conn} do
+      template = insert(:job_template)
+      template = Repo.get!(JobTemplate, template.id)
+
+      old_query = template.user_params |> Map.get("interscity") |> Map.get("sql_query")
+      assert old_query == "select * all"
+      params = %{"attributes" => %{"title" => "updated", "user_params" => %{"interscity" => %{"sql_query" => "hi all"}}}, "id" => template.id}
+      conn = patch(conn, Routes.job_template_path(conn, :update, template.id), %{"data" => params})
+      updated_template = Repo.get!(JobTemplate, template.id)
+      new_query = updated_template.user_params  |> Map.get("interscity") |> Map.get("sql_query")
+      assert new_query == "hi all"
+    end
   end
 end

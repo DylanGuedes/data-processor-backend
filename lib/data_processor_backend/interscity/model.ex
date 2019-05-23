@@ -2,7 +2,9 @@ defmodule DataProcessorBackend.InterSCity.Model do
   defmacro __using__(opts) do
     quote do
       def all do
-        DataProcessorBackend.Repo.all __MODULE__
+        __MODULE__
+        |> order_by(desc: :inserted_at)
+        |> DataProcessorBackend.Repo.all
       end
 
       def find(id),

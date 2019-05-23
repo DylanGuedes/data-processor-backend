@@ -16,22 +16,13 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
     """
   end
 
-  def default_params do
-    %{
-      schema: discover_schema("city_traffic"),
-      functional: %{},
-      interscity: %{
-        capability: "city_traffic"
-      }
-    }
-  end
   def default_params(capability, query)do
     %{
-      schema: discover_schema(capability),
-      functional: %{},
-      interscity: %{
-        capability: capability,
-        sql_queries: String.split(query, "\n")
+      "schema" => discover_schema(capability),
+      "functional" => %{},
+      "interscity" => %{
+        "capability" => capability,
+        "sql_queries" => String.split(query, "\n")
       }
     }
   end

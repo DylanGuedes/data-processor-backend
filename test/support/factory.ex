@@ -10,7 +10,7 @@ defmodule DataProcessorBackend.Factory do
       title: "KMeans Template",
       user_params: %{
         schema: %{temperature: "double"},
-        interscity: %{capability: "temperature"}
+        interscity: %{capability: "temperature", sql_query: "select * all"}
       },
       publish_strategy: %{
         format: "csv"
