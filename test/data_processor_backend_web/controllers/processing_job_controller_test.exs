@@ -3,8 +3,6 @@ defmodule DataProcessorBackendWeb.ProcessingJobControllerTest do
 
   import DataProcessorBackend.Factory
 
-  alias DataProcessorBackend.Repo
-  alias DataProcessorBackend.InterSCity.ProcessingJob
 
 
   setup %{conn: conn} do
@@ -18,7 +16,7 @@ defmodule DataProcessorBackendWeb.ProcessingJobControllerTest do
 
   describe ":index" do
     test "index lists processing jobs", %{conn: conn} do
-      job_script = insert(:processing_job)
+      _job_script = insert(:processing_job)
 
       conn = get conn, Routes.processing_job_path(conn, :index)
 

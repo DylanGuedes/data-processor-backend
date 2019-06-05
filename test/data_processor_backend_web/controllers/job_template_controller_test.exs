@@ -3,7 +3,6 @@ defmodule DataProcessorBackendWeb.JobTemplateControllerTest do
 
   import DataProcessorBackend.Factory
 
-  alias DataProcessorBackendWeb.JobTemplateView
   alias DataProcessorBackend.Repo
   alias DataProcessorBackend.InterSCity.JobTemplate
 
@@ -18,7 +17,7 @@ defmodule DataProcessorBackendWeb.JobTemplateControllerTest do
 
   describe ":index" do
     test "index lists job_templates", %{conn: conn} do
-      job_template = insert(:job_template)
+      insert(:job_template)
 
       conn = get conn, Routes.job_template_path(conn, :index)
 
@@ -38,7 +37,7 @@ defmodule DataProcessorBackendWeb.JobTemplateControllerTest do
     test "correctly creates a new job_template", %{conn: conn} do
       template = insert(:job_template)
       params = %{"attributes" => %{"title" => "newtemplatetitle"}, "id" => template.id}
-      conn = patch(conn, Routes.job_template_path(conn, :update, template.id), %{"data" => params})
+      _conn = patch(conn, Routes.job_template_path(conn, :update, template.id), %{"data" => params})
       updated_template = Repo.get!(JobTemplate, template.id)
       assert updated_template.title != template.title
     end
@@ -50,7 +49,7 @@ defmodule DataProcessorBackendWeb.JobTemplateControllerTest do
       old_query = template.user_params |> Map.get("interscity") |> Map.get("sql_query")
       assert old_query == "select * all"
       params = %{"attributes" => %{"title" => "updated", "user_params" => %{"interscity" => %{"sql_query" => "hi all"}}}, "id" => template.id}
-      conn = patch(conn, Routes.job_template_path(conn, :update, template.id), %{"data" => params})
+      _conn = patch(conn, Routes.job_template_path(conn, :update, template.id), %{"data" => params})
       updated_template = Repo.get!(JobTemplate, template.id)
       new_query = updated_template.user_params  |> Map.get("interscity") |> Map.get("sql_query")
       assert new_query == "hi all"

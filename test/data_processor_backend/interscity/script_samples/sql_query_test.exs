@@ -1,6 +1,5 @@
 defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQueryTest do
   use DataProcessorBackend.DataCase
-  import DataProcessorBackend.Factory
   alias DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery
 
   describe ":gen" do

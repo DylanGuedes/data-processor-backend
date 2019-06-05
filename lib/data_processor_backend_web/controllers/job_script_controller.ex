@@ -13,6 +13,9 @@ defmodule DataProcessorBackendWeb.JobScriptController do
 
   def create(conn, %{"data" => data}) do
     attrs = JaSerializer.Params.to_attributes(data)
+    IO.puts "[START] ATtrs:"
+    IO.inspect attrs
+    IO.puts "[END] aTTRS"
     changeset = JobScript.changeset(%JobScript{}, attrs)
     case Repo.insert(changeset) do
       {:ok, script} ->
@@ -24,9 +27,6 @@ defmodule DataProcessorBackendWeb.JobScriptController do
         |> put_status(422)
         |> render(:errors, data: changeset)
     end
-  end
-
-  def materialize_sql_script(conn, %{"data" => data}) do
   end
 
   def show(conn, %{"id" => id}) do

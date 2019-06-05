@@ -3,7 +3,7 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.Operation do
 end
 
 defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
-  defmacro __using__(opts) do
+  defmacro __using__(_opts) do
     quote do
       def mongodb_url do
         "mongodb://#{System.get_env("DATA_COLLECTOR_MONGO")}/data_collector_development"
@@ -35,11 +35,6 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
             [h|_t] -> h
             _ -> :ok
           end
-
-        IO.inspect lists
-        IO.puts capability
-
-        [h|_t] = lists
 
         Enum.reduce(h, %{}, fn ele, acc -> _parse_sch(ele, acc) end)
       end
@@ -152,5 +147,15 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
         """
       end
     end
+  end
+end
+
+defmodule DataProcessorBackend.InterSCity.ScriptSamples.DefaultStrategy do
+  @behaviour DataProcessorBackend.InterSCity.ScriptSamples.Operation
+  use DataProcessorBackend.InterSCity.ScriptSamples.CodeGen
+
+  def gen_operation do
+    """
+    """
   end
 end

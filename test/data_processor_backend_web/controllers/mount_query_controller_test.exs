@@ -1,9 +1,6 @@
 defmodule DataProcessorBackendWeb.MountQueryControllerTest do
   use DataProcessorBackendWeb.ConnCase
 
-  import DataProcessorBackend.Factory
-
-  alias DataProcessorBackend.Repo
   alias DataProcessorBackend.InterSCity.JobTemplate
   alias DataProcessorBackend.InterSCity.JobScript
   alias DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery
@@ -13,8 +10,10 @@ defmodule DataProcessorBackendWeb.MountQueryControllerTest do
     attrs = %{
       title: "Query SQL",
       language: "python",
-      code: SqlQuery.gen_code(),
-      path: "sql_query.py"}
+      code: "abc",
+      path: "sql_query.py",
+      code_strategy: "Abc",
+      defined_at_runtime: :false}
     {:ok, _script} = attrs |> JobScript.create()
 
     conn =
@@ -34,7 +33,7 @@ defmodule DataProcessorBackendWeb.MountQueryControllerTest do
         "query" => "select * from city_traffic"
       }
       old_count = JobTemplate.count
-      conn = post(conn, Routes.mount_query_path(conn, :mount, data))
+      _conn = post(conn, Routes.mount_query_path(conn, :mount, data))
       new_count = JobTemplate.count
 
       assert old_count==new_count-1

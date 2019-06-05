@@ -18,8 +18,6 @@ defmodule DataProcessorBackendWeb.CloneControllerTest do
   describe ":clone" do
     test "correctly clones a new job_template", %{conn: conn} do
       template = insert(:job_template)
-      refetch_template = Repo.get!(JobTemplate, template.id)
-      old_count = JobTemplate.count()
       conn = post(conn, Routes.job_template_clone_path(conn, :clone, template.id))
       resp = json_response(conn, 200)
       clone_id = resp["data"]["id"]

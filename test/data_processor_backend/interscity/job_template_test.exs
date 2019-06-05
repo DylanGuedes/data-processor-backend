@@ -35,4 +35,20 @@ defmodule DataProcessorBackend.InterSCity.JobTemplateTest do
       assert clone2.user_params==template.user_params
     end
   end
+
+  describe ":interscity_schema" do
+    test "correctly returns interscity_schema" do
+      template = insert(:job_template)
+      sch = Map.get(template.user_params, :schema)
+      assert JobTemplate.interscity_schema(template)==sch
+    end
+  end
+
+  describe ":compare_schemas" do
+    test "correctly compare schemas of different types" do
+      sch1 = %{temperature: "double"}
+      sch2 = %{"temperature" => "double"}
+      assert JobTemplate.compare_schemas(sch1, sch2)==true
+    end
+  end
 end

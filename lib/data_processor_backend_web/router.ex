@@ -13,6 +13,8 @@ defmodule DataProcessorBackendWeb.Router do
 
     post("/mount_query_script", MountQueryController, :mount)
 
+    resources("/script_strategies", ScriptStrategyController, only: [:index, :show])
+
     resources("/job_templates", JobTemplateController, only: [:index, :create, :show, :update, :delete]) do
       post("/clone", CloneController, :clone)
       post("/schedule", JobSchedulerController, :schedule)

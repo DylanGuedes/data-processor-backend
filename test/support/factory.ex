@@ -10,12 +10,13 @@ defmodule DataProcessorBackend.Factory do
       title: "KMeans Template",
       user_params: %{
         schema: %{temperature: "double"},
-        interscity: %{capability: "temperature", sql_query: "select * all"}
+        interscity: %{capability: "city_traffic", sql_query: "select * all"}
       },
       publish_strategy: %{
         format: "csv"
       },
-      job_script: build(:job_script)
+      job_script: build(:job_script),
+      define_schema_at_runtime: false
     }
   end
 
@@ -24,7 +25,9 @@ defmodule DataProcessorBackend.Factory do
       title: "KMeans script",
       code: "blalb",
       language: "python",
-      path: "spark_jobs/python/kmeans.py"
+      path: "spark_jobs/python/kmeans.py",
+      defined_at_runtime: false,
+      code_strategy: "Elixir.DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery"
     }
   end
 

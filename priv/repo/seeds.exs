@@ -17,7 +17,6 @@ alias DataProcessorBackend.InterSCity.ProcessingJob
 alias DataProcessorBackend.InterSCity.ScriptSamples.Kmeans
 alias DataProcessorBackend.InterSCity.ScriptSamples.CollectorSource
 alias DataProcessorBackend.InterSCity.ScriptSamples.Schemas
-alias DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery
 
 Repo.delete_all ProcessingJob
 Repo.delete_all JobTemplate
@@ -26,33 +25,37 @@ Repo.delete_all JobScript
 # Schemas
 
 # Collector Extraction
-attrs = %{
-  title: "Extract Collector",
-  language: CollectorSource.language,
-  code: CollectorSource.code,
-  path: "collectorsource.py"}
-{:ok, script} = attrs |> JobScript.create()
-
-{:ok, template} =
-  %{title: CollectorSource.example_title, user_params: CollectorSource.example_user_params}
-  |> JobTemplate.create(script)
+# attrs = %{
+#   title: "Extract Collector",
+#   language: CollectorSource.language,
+#   code: CollectorSource.code,
+#   defined_at_runtime: false,
+#   path: "collectorsource.py"}
+# {:ok, script} = attrs |> JobScript.create()
+#
+# {:ok, template} =
+#   %{title: CollectorSource.example_title, user_params: CollectorSource.example_user_params}
+#   |> JobTemplate.create(script)
 
 # KMeans
-attrs = %{
-  title: "KMeans",
-  language: Kmeans.language,
-  code: Kmeans.code,
-  path: "kmeans.py"}
-{:ok, script} = attrs |> JobScript.create()
-
-{:ok, template} =
-  %{title: Kmeans.example_title, user_params: Kmeans.example_user_params}
-  |> JobTemplate.create(script)
+# attrs = %{
+#   title: "KMeans",
+#   language: Kmeans.language,
+#   code: Kmeans.code,
+#   defined_at_runtime: false,
+#   path: "kmeans.py"}
+# {:ok, script} = attrs |> JobScript.create()
+#
+# {:ok, template} =
+#   %{title: Kmeans.example_title, user_params: Kmeans.example_user_params}
+#   |> JobTemplate.create(script)
 
 # Query SQL
 attrs = %{
   title: "Query SQL",
   language: "python",
-  code: SqlQuery.gen_code(),
+  code: "sorry",
+  defined_at_runtime: true,
+  code_strategy: "Elixir.DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery",
   path: "sql_query.py"}
 {:ok, script} = attrs |> JobScript.create()

@@ -8,6 +8,11 @@ defmodule DataProcessorBackendWeb.JobSchedulerController do
 
   def schedule(conn, %{"job_template_id" => template_id}) do
     template = JobTemplate.find!(template_id)
+
+    if template.define_schema_at_runtime do
+      JobTemplate.reset_schema(template)
+    end
+
     job = JobTemplate.schedule_job(template)
 
     conn
