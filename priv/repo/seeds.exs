@@ -51,11 +51,11 @@ Repo.delete_all JobScript
 #   |> JobTemplate.create(script)
 
 # Query SQL
-attrs = %{
-  title: "Query SQL",
-  language: "python",
-  code: "sorry",
-  defined_at_runtime: true,
-  code_strategy: "Elixir.DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery",
-  path: "sql_query.py"}
-{:ok, script} = attrs |> JobScript.create()
+# attrs = %{
+#   title: "Query SQL",
+#   language: "python",
+#   code: "sorry",
+#   defined_at_runtime: true,
+#   code_strategy: "Elixir.DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery",
+#   path: "sql_query.py"}
+# {:ok, script} = attrs |> JobScript.create()

@@ -25,7 +25,7 @@ defmodule DataProcessorBackend.InterSCity.JobTemplate do
     %{day: day, year: year, month: month, hour: hour, minute: minute, second: second} = DateTime.utc_now()
 
     field(:publish_strategy, :map, null: false, default: %{
-      format: "csv",
+      format: "parquet",
       path: "#{day}-#{month}-#{year}-#{hour}-#{minute}-#{second}"
     })
 

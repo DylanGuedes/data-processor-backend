@@ -12,7 +12,10 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
     \        for q in queries:
     \            df = spark.sql(q)
     \    else:
-    \        df = spark.sql(queries)
+    \        qq = queries.split(";")
+    \        for q in qq:
+    \            if (q):
+    \                df = spark.sql(q)
     """
   end
 
@@ -22,7 +25,7 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
       "functional" => %{},
       "interscity" => %{
         "capability" => capability,
-        "sql_queries" => String.split(query, "\n")
+        "sql_queries" => String.split(query, ";")
       }
     }
   end

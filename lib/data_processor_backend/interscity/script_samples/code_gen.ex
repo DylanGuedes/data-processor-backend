@@ -77,6 +77,7 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
         """
         \    MASTER_URL = "#{System.get_env("SPARK_MASTER")}"
         \    conf = (SparkConf()
+        \     .set("spark.driver.bindAddress", "127.0.0.1")
         \     .set("spark.eventLog.enabled", "true")
         \     .set("spark.history.fs.logDirectory", "/tmp/spark-events")
         \     .set("spark.jars.packages", "org.mongodb.spark:mongo-spark-connector_2.11:2.4.0")
@@ -105,13 +106,14 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
         """
         \    schema_params = params["schema"]
         \    sch = StructType()
-        \    sch.add("uuid", StringType())
         \    for k,v in schema_params.items():
-        \        if (k=="string"):
+        \        if (v=="string"):
         \            sch.add(k, StringType())
-        \        elif (k=="double"):
+        \        elif (v=="double"):
         \            sch.add(k, DoubleType())
-        \        elif (k=="integer"):
+        \        elif (v=="integer"):
+        \            sch.add(k, LongType())
+        \        elif (v=="int"):
         \            sch.add(k, LongType())
         """
       end
