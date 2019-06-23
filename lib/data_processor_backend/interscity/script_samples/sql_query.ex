@@ -15,7 +15,10 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
     \        qq = queries.split(";")
     \        for q in qq:
     \            if (q):
-    \                df = spark.sql(q)
+    \                if (q == ''):
+    \                    continue
+    \                else:
+    \                    df = spark.sql(q)
     """
   end
 
