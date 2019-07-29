@@ -1,7 +1,5 @@
 defmodule DataProcessorBackend.InterSCity.ScriptSamples.SqlQuery do
   alias DataProcessorBackend.InterSCity.ScriptSamples.CodeGen
-  alias DataProcessorBackend.InterSCity.ScriptSamples.Operation
-  @behaviour Operation
   use DataProcessorBackend.InterSCity.ScriptSamples.CodeGen
 
   def gen_operation do

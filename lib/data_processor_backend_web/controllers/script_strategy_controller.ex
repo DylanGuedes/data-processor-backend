@@ -9,6 +9,10 @@ defmodule DataProcessorBackendWeb.ScriptStrategyController do
     %{
       strategy_name: "Elixir.DataProcessorBackend.InterSCity.ScriptSamples.PandasDataFrame",
       id: 2
+    },
+    %{
+      strategy_name: "Elixir.DataProcessorBackend.InterSCity.ScriptSamples.Kmeans",
+      id: 3
     }
   ]
 

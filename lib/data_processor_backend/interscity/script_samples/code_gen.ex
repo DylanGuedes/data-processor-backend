@@ -1,7 +1,3 @@
-defmodule DataProcessorBackend.InterSCity.ScriptSamples.Operation do
-  @callback gen_operation():: String.t
-end
-
 defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
   defmacro __using__(_opts) do
     quote do
@@ -127,6 +123,8 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
         """
       end
 
+      def gen_operation(), do: ""
+
       def gen_footer() do
         """
         #{footer_commons()}
@@ -148,15 +146,25 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.CodeGen do
         #{gen_footer()}
         """
       end
+
+      defoverridable [gen_header: 0, gen_operation: 0, gen_body: 0,
+        gen_footer: 0, mount_schema: 0, retrieve_collector_data: 0,
+        headers_commons: 0, request_template: 0, spark_config: 0]
     end
   end
 end
 
 defmodule DataProcessorBackend.InterSCity.ScriptSamples.DefaultStrategy do
   @behaviour DataProcessorBackend.InterSCity.ScriptSamples.Operation
+  @behaviour DataProcessorBackend.InterSCity.ScriptSamples.Header
   use DataProcessorBackend.InterSCity.ScriptSamples.CodeGen
 
   def gen_operation do
+    """
+    """
+  end
+
+  def gen_header do
     """
     """
   end
