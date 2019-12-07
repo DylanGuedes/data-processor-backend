@@ -2,11 +2,6 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.Kmeans do
   alias DataProcessorBackend.InterSCity.ScriptSamples.CodeGen
   use DataProcessorBackend.InterSCity.ScriptSamples.CodeGen
 
-  alias DataProcessorBackend.InterSCity.ScriptSamples.Operation
-  alias DataProcessorBackend.InterSCity.ScriptSamples.Headers
-  @behaviour Operation
-  @behaviour Headers
-
   def headers_commons do
     """
     from pyspark import SparkContext, SparkConf
@@ -22,22 +17,12 @@ defmodule DataProcessorBackend.InterSCity.ScriptSamples.Kmeans do
     """
   end
 
-  def gen_header do
-    """
-    #{headers_commons()}
-    if __name__ == '__main__':
-    #{request_template()}
-    #{spark_config()}
-    """
-  end
-
   def gen_operation do
     """
     \    kmeans_params = params["functional"]
     \    features = list(map(lambda a: a.strip(), kmeans_params["features"].split(",")))
     \    assembler = VectorAssembler(inputCols=features, outputCol="features")
     \    assembled_df = assembler.transform(df).select("features")
-    \    # Running KMeans
     \    how_many_clusters = int(kmeans_params.get("k", 2))
     \    seed_to_use = kmeans_params.get("seed", 1)
     \    kmeans = KMeans().setK(how_many_clusters).setSeed(seed_to_use)
